@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzp.ys.dao.AddDataDao">
+    <select id="selectRelics" parameterType="com.wzp.ys.model.Relics" resultType="com.wzp.ys.model.Relics">
+        SELECT r.relics_name as `name`,
+        CASE WHEN ri.parts_number = 1 THEN '生之花' WHEN ri.parts_number = 2 THEN '死之羽' WHEN ri.parts_number = 3 THEN '时之沙'
+        WHEN ri.parts_number = 4 THEN '空之杯' WHEN ri.parts_number = 5 THEN '理之冠'  END as parts,
+        ri.*
+        FROM relics r left join relics_info ri on r.relics_number = ri.relics_number
+        <where>
+            <if test="name != null and name != '' ">
+                and ri.relics_number = #{relicsNum}
+            </if>
+            <if test="partsNum != null and partsNum != '' ">
+                and ri.parts_number = #{partsNum}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRelicsName" resultType="com.wzp.ys.model.Relics">
+        SELECT suit_name as `name`,suit_number as relicsNum FROM relics_suit
+    </select>
+
+    <insert id="insertRelics" parameterType="com.wzp.ys.model.Relics">
+        insert into relics_info (relics_number, parts_number, atk, def, hp, atks, defs, hps, em, ec, hit, fatk, aps, ads, tmt, `time`)
+        values
+        <foreach collection="Relics" index="index" item="item" open="" separator="," close="">
+            (#{item.relicsNum},#{item.partsNum},#{item.atk},#{item.def},#{item.hp},#{item.atks}
+            ,#{item.defs},#{item.hps},#{item.em},#{item.ec},#{item.hit},#{item.fatk},#{item.aps},#{item.ads},#{item.tmt},now())
+        </foreach>
+    </insert>
+
+    <select id="selectEm" resultType="com.wzp.ys.model.Echats">
+        select em,increase_original as increaseData,increase_count as increaseCount,
+               fusion,fusion_dio as fusionDio,fusion_dic as fusionDic,crystal,crystal_dio as crystalDio from em_info order by em
+    </select>
+</mapper>

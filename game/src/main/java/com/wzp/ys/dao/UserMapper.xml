@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wzp.ys.dao.UserMapper">
+    <resultMap id="User" type="com.wzp.ys.model.User">
+        <result property="userName" column="user_name" />
+        <result property="passWord" column="pass_word" />
+    </resultMap>
+    <!--查询-->
+    <select id="userPassword" parameterType="string" resultType="string">
+        select pass_word from user where user_name=#{userName}
+    </select>
+
+</mapper>
